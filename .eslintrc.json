@@ -1,0 +1,9 @@
+{
+  "extends": "@agsolutions/eslint-config/node",
+  "rules": {
+    "import/no-extraneous-dependencies": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+    "@typescript-eslint/restrict-plus-operands": "off"
+  }
+}

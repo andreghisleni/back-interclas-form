@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  email String @unique()
+  user  String @unique()
+
+  name String
+
+  password       String
+  first_password Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_tokens UserToken[]
+
+  @@map(name: "users")
+}
+
+model UserToken {
+  id String @id @default(uuid())
+
+  token String @unique() @default(uuid())
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "user_tokens")
+}
+
+model Inscription {
+  id String @id @default(uuid())
+
+  cla_name String
+
+  scout_group_name          String
+  scout_group_number        String
+  scout_group_city          String
+  scout_group_state         String
+  scout_group_district_name String
+
+  pix_key         String?
+  bank            String?
+  agency          String?
+  account         String?
+  holder_name     String
+  holder_document String
+
+  responsable_name  String
+  responsable_email String
+  responsable_phone String
+
+  receipt_file String
+
+  members Member[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "inscriptions")
+}
+
+model MemberType {
+  id String @id @default(uuid())
+
+  name        String @unique
+  label       String
+  description String
+
+  members Member[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "member_types")
+}
+
+model Member {
+  id String @id @default(uuid())
+
+  name     String
+  sex      String?
+  register String?
+
+  alimentation_restrictions String
+  health_restrictions       String
+
+  function      String?
+  can_assist_in String?
+
+  arrive_for_lunch Boolean @default(false)
+
+  member_type_id String
+  member_type    MemberType @relation(fields: [member_type_id], references: [id])
+
+  inscription_id String
+  inscription    Inscription @relation(fields: [inscription_id], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map(name: "members")
+}
