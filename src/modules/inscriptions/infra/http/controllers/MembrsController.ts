@@ -19,7 +19,14 @@ export class MembersController {
         member_type: member.member_type,
         inscription: {
           id: member.inscription.id,
-          4: member.inscription.cla_name,
+          cla_name: member.inscription.cla_name,
+          scout_group: {
+            name: member.inscription.scout_group_name,
+            number: member.inscription.scout_group_number,
+            city: member.inscription.scout_group_city,
+            state: member.inscription.scout_group_state,
+            district_name: member.inscription.scout_group_district_name,
+          },
         },
       })),
     );
