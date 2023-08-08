@@ -3,16 +3,17 @@ import { Member, MemberType, Prisma } from '@prisma/client';
 import { prisma } from '@shared/infra/prisma';
 
 import {
-  IMember,
+  IMemberAll,
   IMemberType,
   IMembersRepository,
 } from '@modules/inscriptions/repositories/IMembersRepository';
 
 export class MembersRepository implements IMembersRepository {
-  public async findAll(): Promise<IMember[]> {
+  public async findAll(): Promise<IMemberAll[]> {
     const findMembers = await prisma.member.findMany({
       include: {
         member_type: true,
+        inscription: true,
       },
     });
 

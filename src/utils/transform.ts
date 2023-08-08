@@ -1,4 +1,5 @@
-
+import { IInscription } from '@modules/inscriptions/repositories/IInscriptionsRepository';
+import { IMemberAll } from '@modules/inscriptions/repositories/IMembersRepository';
 import { IUser } from '@modules/users/repositories/IUsersRepository';
 
 import { getFileUrl } from './getFileUrl';
@@ -40,3 +41,36 @@ export const userTransform = (user: IUser | IUser[]) => {
 
 //   return parseTransaction(transaction);
 // };
+
+export const inscriptionTransform = (
+  inscription: IInscription | IInscription[],
+) => {
+  const parseInscription = (i: IInscription) => ({
+    ...i,
+    receipt_file_url: getFileUrl(i.receipt_file),
+  });
+
+  if (Array.isArray(inscription)) {
+    return inscription.map(inscriptionItem =>
+      parseInscription(inscriptionItem),
+    );
+  }
+
+  return parseInscription(inscription);
+};
+
+export const memberTransform = (member: IMemberAll | IMemberAll[]) => {
+  const parseMember = (m: IMemberAll) => ({
+    ...m,
+    inscription: {
+      ...m.inscription,
+      receipt_file_url: getFileUrl(m.inscription.receipt_file),
+    },
+  });
+
+  if (Array.isArray(member)) {
+    return member.map(memberItem => parseMember(memberItem));
+  }
+
+  return parseMember(member);
+};

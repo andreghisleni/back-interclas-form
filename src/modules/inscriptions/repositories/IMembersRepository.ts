@@ -7,6 +7,14 @@ export type IMember = Member &
     };
   }>;
 
+export type IMemberAll = Member &
+  Prisma.MemberGetPayload<{
+    include: {
+      member_type: true;
+      inscription: true;
+    };
+  }>;
+
 export type IMemberType = MemberType &
   Prisma.MemberTypeGetPayload<{
     include: {
@@ -19,7 +27,7 @@ export type IMemberType = MemberType &
   }>;
 
 export interface IMembersRepository {
-  findAll(): Promise<IMember[]>;
+  findAll(): Promise<IMemberAll[]>;
   create(data: Prisma.MemberUncheckedCreateInput): Promise<Member>;
   save(member: Member): Promise<Member>;
   findAllTypes(): Promise<MemberType[]>;

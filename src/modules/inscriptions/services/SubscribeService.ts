@@ -152,10 +152,10 @@ export class SubscribeService {
       })) as Member[];
     }
 
-    const parseDrivers = [] as Member[];
+    let parseDrivers = [] as Member[];
 
     if (drivers) {
-      drivers.map(member => ({
+      parseDrivers = drivers.map(member => ({
         name: member.name,
         arrive_for_lunch: member.arrive_for_lunch,
 
