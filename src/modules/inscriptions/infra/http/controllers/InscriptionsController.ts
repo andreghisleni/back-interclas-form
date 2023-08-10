@@ -31,21 +31,19 @@ export class InscriptionsController {
         phone: z.string(),
       }),
       receipt_file: z.string(),
-      members: z
-        .array(
-          z.object({
-            name: z.string(),
-            sex: z.string(),
-            register: z.string(),
-            restrictions: z.object({
-              alimentation: z.string(),
-              health: z.string(),
-            }),
-            type: z.string(),
-            arrive_for_lunch: z.coerce.boolean(),
+      members: z.array(
+        z.object({
+          name: z.string(),
+          sex: z.string(),
+          register: z.string(),
+          restrictions: z.object({
+            alimentation: z.string(),
+            health: z.string(),
           }),
-        )
-        .min(1),
+          type: z.string(),
+          arrive_for_lunch: z.coerce.boolean(),
+        }),
+      ),
       staff: z
         .array(
           z.object({
@@ -94,7 +92,7 @@ export class InscriptionsController {
       payment,
       responsable,
       receipt_file,
-      members,
+      members: members || undefined,
       staff: staff || undefined,
       drivers: drivers || undefined,
     });

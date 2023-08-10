@@ -35,7 +35,7 @@ interface IRequest {
 
   receipt_file: string;
 
-  members: {
+  members?: {
     name: string;
     sex: string;
     register: string;
@@ -117,18 +117,22 @@ export class SubscribeService {
       receipt_file,
     });
 
-    const parseMembers = members.map(member => ({
-      name: member.name,
-      sex: member.sex,
-      register: member.register,
-      arrive_for_lunch: member.arrive_for_lunch,
-      alimentation_restrictions: member.restrictions.alimentation,
-      health_restrictions: member.restrictions.health,
-      member_type_id:
-        member_types.find(type => type.name === member.type)?.id ||
-        member_types[0].id,
-      inscription_id: inscription.id,
-    })) as Member[];
+    let parseMembers = [] as Member[];
+
+    if (members) {
+      parseMembers = members.map(member => ({
+        name: member.name,
+        sex: member.sex,
+        register: member.register,
+        arrive_for_lunch: member.arrive_for_lunch,
+        alimentation_restrictions: member.restrictions.alimentation,
+        health_restrictions: member.restrictions.health,
+        member_type_id:
+          member_types.find(type => type.name === member.type)?.id ||
+          member_types[0].id,
+        inscription_id: inscription.id,
+      })) as Member[];
+    }
 
     let parseStaff = [] as Member[];
 
