@@ -4,10 +4,11 @@ import { inject, injectable } from 'tsyringe';
 import { IExcelGeneratorProvider } from '@shared/container/providers/ExcelGeneratorProvider/models/IExcelGeneratorProvider';
 import { IStorageProvider } from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 
-import {
-  IInscription,
-  IInscriptionsRepository,
-} from '../repositories/IInscriptionsRepository';
+import { IInscriptionsRepository } from '../repositories/IInscriptionsRepository';
+
+interface IResponse {
+  fileUrl: string;
+}
 
 @injectable()
 export class ExportToExcelService {
@@ -21,7 +22,7 @@ export class ExportToExcelService {
     @inject('StorageProvider')
     private storageProvider: IStorageProvider,
   ) { } // eslint-disable-line
-  public async execute(): Promise<IInscription[]> {
+  public async execute(): Promise<IResponse> {
     const inscriptions = await this.inscriptionsRepository.findAll();
 
     const data = inscriptions.map(inscription => {
@@ -74,6 +75,8 @@ export class ExportToExcelService {
 
     await this.storageProvider.saveFile(fileName);
 
-    return inscriptions;
+    return {
+      fileUrl: getFileUrl(fileName) || '',
+    };
   }
 }
