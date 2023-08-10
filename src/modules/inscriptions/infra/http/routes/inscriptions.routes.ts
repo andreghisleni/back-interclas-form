@@ -5,6 +5,7 @@ import { uploadConfig } from '@config/upload';
 
 import { ensureAuthenticated } from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 
+import { ExportInscriptionToExcelController } from '../controllers/ExportInscriptionToExcelController';
 import { FileUploadController } from '../controllers/FileUploadController';
 import { InscriptionsController } from '../controllers/InscriptionsController';
 import { InscriptionsCountController } from '../controllers/InscriptionsCountController';
@@ -15,6 +16,8 @@ const inscriptionsController = new InscriptionsController();
 const inscriptionsCountController = new InscriptionsCountController();
 const fileUploadController = new FileUploadController();
 const membersController = new MembersController();
+const exportInscriptionToExcelController =
+  new ExportInscriptionToExcelController();
 
 const upload = multer(uploadConfig.multer);
 
@@ -36,5 +39,6 @@ inscriptionsRouter.post(
 );
 
 inscriptionsRouter.get('/count', inscriptionsCountController.index);
+inscriptionsRouter.get('/export', exportInscriptionToExcelController.index);
 
 export { inscriptionsRouter };

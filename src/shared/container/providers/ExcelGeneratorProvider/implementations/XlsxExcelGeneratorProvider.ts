@@ -17,9 +17,9 @@ export class XlsxExcelGeneratorProvider implements IExcelGeneratorProvider {
       xlsx.utils.book_append_sheet(wb, xlsx.utils.json_to_sheet(data), name);
     });
 
-    const { downloadsFolder } = uploadConfig;
+    const { tmpFolder } = uploadConfig;
 
-    const pathToGenerate = path.resolve(downloadsFolder, fileName);
+    const pathToGenerate = path.resolve(tmpFolder, fileName);
 
     xlsx.writeFile(wb, pathToGenerate);
 
