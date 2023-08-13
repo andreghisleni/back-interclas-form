@@ -5,6 +5,7 @@ import { IExcelGeneratorProvider } from '@shared/container/providers/ExcelGenera
 import { IStorageProvider } from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 
 import { IInscriptionsRepository } from '../repositories/IInscriptionsRepository';
+import { IMembersRepository } from '../repositories/IMembersRepository';
 
 interface IResponse {
   fileUrl: string;
@@ -16,6 +17,9 @@ export class ExportToExcelService {
     @inject('InscriptionsRepository')
     private inscriptionsRepository: IInscriptionsRepository,
 
+    @inject('MembersRepository')
+    private membersRepository: IMembersRepository,
+
     @inject('ExcelGeneratorProvider')
     private excelGeneratorProvider: IExcelGeneratorProvider,
 
@@ -24,6 +28,7 @@ export class ExportToExcelService {
   ) { } // eslint-disable-line
   public async execute(): Promise<IResponse> {
     const inscriptions = await this.inscriptionsRepository.findAll();
+    const members = await this.membersRepository.findAll();
 
     const data = inscriptions.map(inscription => {
       const totalPioneiros = inscription.members.filter(
@@ -63,12 +68,33 @@ export class ExportToExcelService {
       };
     });
 
+    const dataMembers = members.map(member => {
+      return {
+        Nome: member.name,
+        Tipo: member.member_type.label,
+        Registro: member.register || '',
+        'Nome do Clã': member.inscription.cla_name,
+        'Grupo escoteiro': `${member.inscription.scout_group_name} - ${member.inscription.scout_group_number}/${member.inscription.scout_group_state}`,
+        Função: member.function || '',
+        'Pode auxiliar em?': member.can_assist_in || '',
+        'Restrições alimentares': member.alimentation_restrictions,
+        'Restrições medicas': member.health_restrictions,
+        'Vai chegar no sábado de manhã?': member.arrive_for_lunch
+          ? 'Sim'
+          : 'Não',
+      };
+    });
+
     const fileName = await this.excelGeneratorProvider.generate({
       fileName: `${new Date().getTime()}-inscriptions.xlsx`,
       sheets: [
         {
           name: 'Clãs inscritos',
           data,
+        },
+        {
+          name: 'Membros inscritos',
+          data: dataMembers,
         },
       ],
     });
